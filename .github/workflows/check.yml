@@ -1,12 +1,16 @@
 name: Source checks
 on:
   push:
+    branches:
+      - '**'
   pull_request:
 permissions:
   contents: read
 jobs:
   lua-and-package:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-name: addon-${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -24,3 +28,45 @@ jobs:
                   check(path.read_text(encoding='utf-8'), str(path))
           PY
       - run: uv run python tools/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: addon-${{ github.run_id }}
+          path: dist/OpenMapDungeonRoutes-*.zip
+          if-no-files-found: error
+          overwrite: true
+
+  release:
+    needs: lua-and-package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.sha }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.lua-and-package.outputs.artifact-name }}
+          path: dist
+      - name: Publish installable ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(awk '/^## Version: / { print $3; exit }' OpenMapDungeonRoutes/OpenMapDungeonRoutes.toc)
+          tag="v${version}-main.${GITHUB_SHA}"
+          asset="OpenMapDungeonRoutes-${version}.zip"
+          test -s "dist/$asset"
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --target "$GITHUB_SHA" \
+              --title "OpenMap Dungeon Routes ${version} (${GITHUB_SHA:0:7})" \
+              --notes "Automatic build from main commit ${GITHUB_SHA}. Extract the OpenMapDungeonRoutes folder into Interface/AddOns. Requires OpenMap and ForeverDungeonRoutes." \
+              --latest
+          fi
+          if ! gh release view "$tag" --json assets --jq '.assets[].name' | grep -Fxq "$asset"; then
+            gh release upload "$tag" "dist/$asset"
+          fi

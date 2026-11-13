@@ -3,6 +3,7 @@
 ## 0.1.3 — 2026-11-13
 
 - Room markers retain the diamond and player name without the approximation suffix; the status line still identifies the room estimate rather than exact coordinates.
+- Successful main pushes now publish an installable ZIP to GitHub Releases, tagged by addon version and commit; pull requests and other branches never publish.
 
 ## 0.1.2 — 2026-11-13
 
