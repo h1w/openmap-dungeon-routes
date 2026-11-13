@@ -1,0 +1,26 @@
+name: Source checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  lua-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.9.5'
+      - run: uv sync --locked --python 3.12
+      - name: Check Lua 5.1 syntax
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from lupa.lua51 import LuaRuntime
+          check = LuaRuntime().eval('function(code, name) local f,e=loadstring(code,name); assert(f,e) end')
+          for folder in ('OpenMapDungeonRoutes', 'tests'):
+              for path in Path(folder).glob('*.lua'):
+                  check(path.read_text(encoding='utf-8'), str(path))
+          PY
+      - run: uv run python tools/package.py
