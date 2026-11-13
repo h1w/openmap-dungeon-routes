@@ -3,7 +3,7 @@
 ## Notes: Forever Dungeon Routes inside OpenMap: routes, boss portraits and player rooms.
 ## Notes-ruRU: Маршруты FDR, портреты боссов и положение игрока на картах данжей OpenMap.
 ## Author: OpenMap Dungeon Routes contributors
-## Version: 0.1.2
+## Version: 0.1.3
 ## Dependencies: OpenMap, ForeverDungeonRoutes
 ## OptionalDeps: ForeverDungeonJournal, AzerothCompendium
 ## SavedVariables: OpenMapDungeonRoutesDB

@@ -251,7 +251,7 @@ function Render:Position(dr, key, floor)
 			self.status:SetText(("%s: %.1f, %.1f"):format(NS.T("position"), pos.x * 100, pos.y * 100))
 		else
 			self:Room(pos.room, floor, 1, 0.75, 0.2)
-			self.roomMarker.text:SetText(me .. " — " .. NS.T("approx"))
+			self.roomMarker.text:SetText(me)
 			self:Place(self.roomMarker, pos.x, pos.y)
 			self.status:SetText(NS.T("room") .. ": " .. (dr.LocText(pos.room, "name") or "") .. " — " .. NS.T("notcoords"))
 		end

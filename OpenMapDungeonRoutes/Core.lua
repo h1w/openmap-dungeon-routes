@@ -6,7 +6,7 @@ local strings = {
 	bosses = { "Bosses", "Боссы" },
 	choose = { "Choose route", "Выбрать маршрут" }, browse = { "Dungeons", "Подземелья" },
 	noroute = { "No route available in FDR. Create or import one in /fdr.", "В FDR нет маршрута. Создай или импортируй его через /fdr." },
-	approx = { "approx.", "примерно" }, room = { "Current room", "Текущая комната" },
+	room = { "Current room", "Текущая комната" },
 	notcoords = { "room estimate, not coordinates", "область комнаты, не точные координаты" },
 	position = { "Position", "Координаты" }, you = { "You", "Ты" }, floor = { "Change floor", "Перейти на этаж" },
 	unknown = { "Position unavailable; waiting for a known room.", "Позиция недоступна; ожидаем известную комнату." },

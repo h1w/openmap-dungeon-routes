@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 — 2026-11-13
+
+- Room markers retain the diamond and player name without the approximation suffix; the status line still identifies the room estimate rather than exact coordinates.
+
 ## 0.1.2 — 2026-11-13
 
 - Boss portrait sources are tried per boss: native Forever API, optional DungeonJournal, optional AzerothCompendium, then skull.
@@ -23,4 +27,4 @@
 - OpenMap's bundled locale texture fix retained; custom FDR maps and Compendium Scholomance/Naxxramas images referenced in place.
 - Dungeon browser supports instances with no OpenMap entrance, including Naxxramas.
 
-No upstream addon files or third-party art/databases are redistributed. Actual movement/location inside an instance remains an in-game acceptance check.
+No upstream addon files or third-party art/databases are redistributed. In-game Dalaran checks confirmed that room detection works while public position APIs withhold coordinates; movement did not change the scale-normalized screen center of the minimap. The fallback remains a room marker, not a measured player position.
