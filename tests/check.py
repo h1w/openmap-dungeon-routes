@@ -124,6 +124,7 @@ for _, floors in lua.globals().NS.CheckedCatalog.items():
                 checked.add(relative)
 load((ROOT / "tests/view_regressions.lua").read_text(encoding="utf-8"), "View regressions", lua.globals().NS)
 load((ROOT / "OpenMapDungeonRoutes/Render.lua").read_text(encoding="utf-8"), "Render", lua.globals().NS)
+load((ROOT / "tests/path_rendering.lua").read_text(encoding="utf-8"), "Path rendering", lua.globals().NS)
 load((ROOT / "tests/boss_visibility.lua").read_text(encoding="utf-8"), "Boss visibility", lua.globals().NS)
 load((ROOT / "OpenMapDungeonRoutes/Core.lua").read_text(encoding="utf-8"), "Core", lua.globals().NS)
 lua.execute('''
