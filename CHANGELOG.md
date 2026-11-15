@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 — 2026-11-15
+
+- Fixed dark route casings covering colored paths at bends and crossings; casing, color and direction arrows now use separate draw sublevels, including reused lines.
+- Route gradients now follow segment midpoint distance rather than vertex count, matching FDR on unevenly sampled paths.
+
 ## 0.1.3 — 2026-11-13
 
 - Room markers retain the diamond and player name without the approximation suffix; the status line still identifies the room estimate rather than exact coordinates.

@@ -52,13 +52,14 @@ function Render:Place(pin, x, y)
 	pin:Show()
 end
 
-function Render:Line(x1, y1, x2, y2, thickness, red, green, blue, alpha)
+function Render:Line(subLevel, x1, y1, x2, y2, thickness, red, green, blue, alpha)
 	self.usedLines = self.usedLines + 1
 	local line = self.lines[self.usedLines]
 	if not line then
 		line = self.layer:CreateLine(nil, "ARTWORK")
 		self.lines[self.usedLines] = line
 	end
+	line:SetDrawLayer("ARTWORK", subLevel)
 	line:SetThickness(thickness)
 	line:SetColorTexture(red, green, blue, alpha or 1)
 	line:SetStartPoint("TOPLEFT", self.layer, x1, -y1)
@@ -70,8 +71,8 @@ function Render:Arrow(x, y, dx, dy)
 	local len = math.sqrt(dx * dx + dy * dy)
 	if len < 0.01 then return end
 	dx, dy = dx / len, dy / len
-	self:Line(x - dx * 6 - dy * 3, y - dy * 6 + dx * 3, x, y, 2, 0.08, 0.06, 0.03)
-	self:Line(x - dx * 6 + dy * 3, y - dy * 6 - dx * 3, x, y, 2, 0.08, 0.06, 0.03)
+	self:Line(4, x - dx * 6 - dy * 3, y - dy * 6 + dx * 3, x, y, 2, 0.08, 0.06, 0.03)
+	self:Line(4, x - dx * 6 + dy * 3, y - dy * 6 - dx * 3, x, y, 2, 0.08, 0.06, 0.03)
 end
 
 function Render:Paths(dr, route, floor)
@@ -81,7 +82,15 @@ function Render:Paths(dr, route, floor)
 			if path.floor == floor then
 				local pts = path.pts
 				local travelled, nextArrow = 0, 38
-				local count = math.max(1, #pts / 2 - 1)
+				local total = 0
+				if path.kind ~= "side" then
+					for j = 1, #pts - 3, 2 do
+						local dx = (pts[j + 2] - pts[j]) * self.width
+						local dy = (pts[j + 3] - pts[j + 1]) * self.height
+						total = total + math.sqrt(dx * dx + dy * dy)
+					end
+				end
+				if total <= 0 then total = 1 end
 				for j = 1, #pts - 3, 2 do
 					local x1, y1 = pts[j] * self.width, pts[j + 1] * self.height
 					local x2, y2 = pts[j + 2] * self.width, pts[j + 3] * self.height
@@ -92,16 +101,17 @@ function Render:Paths(dr, route, floor)
 							local start = -(travelled % 12)
 							while start < len do
 								local a, b = math.max(0, start), math.min(len, start + 7)
-								if b > a then self:Line(x1 + dx * a / len, y1 + dy * a / len,
+								if b > a then self:Line(0, x1 + dx * a / len, y1 + dy * a / len,
 									x1 + dx * b / len, y1 + dy * b / len, 2.5, 0.9, 0.87, 0.75) end
 								start = start + 12
 							end
 						end
 					else
-						local t = (path.t0 or 0) + ((j - 1) / 2 / count) * ((path.t1 or 1) - (path.t0 or 0))
+						local t = (path.t0 or 0) + ((travelled + len * 0.5) / total) * ((path.t1 or 1) - (path.t0 or 0))
 						local red, green, blue = dr.GradientColor(t)
-						self:Line(x1, y1, x2, y2, 6, 0.05, 0.04, 0.03, 0.85)
-						self:Line(x1, y1, x2, y2, 3.5, red, green, blue)
+						-- Keep every casing below all route colors, including intersecting paths.
+						self:Line(-6, x1, y1, x2, y2, 6, 0.05, 0.04, 0.03, 0.85)
+						self:Line(0, x1, y1, x2, y2, 3.5, red, green, blue)
 						while nextArrow <= travelled + len do
 							local f = len > 0 and (nextArrow - travelled) / len or 0
 							self:Arrow(x1 + dx * f, y1 + dy * f, dx, dy)
