@@ -1,23 +1,23 @@
 local ADDON, NS = ...
 _G.OpenMapDungeonRoutes = NS
-local RU = GetLocale() == "ruRU"
+local LOCALE_COLUMN = ({ ruRU = 2, deDE = 3 })[GetLocale()] or 1
 local strings = {
-	routes = { "Routes", "Маршруты" }, follow = { "Follow", "Следовать" },
-	bosses = { "Bosses", "Боссы" },
-	choose = { "Choose route", "Выбрать маршрут" }, browse = { "Dungeons", "Подземелья" },
-	noroute = { "No route available in FDR. Create or import one in /fdr.", "В FDR нет маршрута. Создай или импортируй его через /fdr." },
-	room = { "Current room", "Текущая комната" },
-	notcoords = { "room estimate, not coordinates", "область комнаты, не точные координаты" },
-	position = { "Position", "Координаты" }, you = { "You", "Ты" }, floor = { "Change floor", "Перейти на этаж" },
-	unknown = { "Position unavailable; waiting for a known room.", "Позиция недоступна; ожидаем известную комнату." },
-	tick = { "Click: toggle completion. Alt-click: show to group (FDR).", "Клик: отметить прохождение. Alt-клик: показать группе (FDR)." },
-	combat = { "Open the dungeon map after combat.", "Открой карту подземелья после боя." },
-	entrance = { "Dungeon entrance not built yet. Open its entrance on OpenMap first.", "Вход ещё не построен. Сначала открой вход этого данжа на OpenMap." },
-	incompatible = { "Unsupported OpenMap dungeon view; integration disabled.", "Несовместимое окно данжей OpenMap; интеграция отключена." },
-	ready = { "Ready. /omdr opens the dungeon browser; /omdr pos checks location.", "Готово. /omdr — список подземелий; /omdr pos — проверка позиции." },
-	missing = { "OpenMap and ForeverDungeonRoutes must be enabled.", "Включи OpenMap и ForeverDungeonRoutes." },
+	routes = { "Routes", "Маршруты", "Routen" }, follow = { "Follow", "Следовать", "Folgen" },
+	bosses = { "Bosses", "Боссы", "Bosse" },
+	choose = { "Choose route", "Выбрать маршрут", "Route wählen" }, browse = { "Dungeons", "Подземелья", "Dungeons" },
+	noroute = { "No route available in FDR. Create or import one in /fdr.", "В FDR нет маршрута. Создай или импортируй его через /fdr.", "In FDR gibt es keine Route. Erstelle oder importiere eine mit /fdr." },
+	room = { "Current room", "Текущая комната", "Aktueller Raum" },
+	notcoords = { "room estimate, not coordinates", "область комнаты, не точные координаты", "Raumbereich, keine genauen Koordinaten" },
+	position = { "Position", "Координаты", "Position" }, you = { "You", "Ты", "Du" }, floor = { "Change floor", "Перейти на этаж", "Etage wechseln" },
+	unknown = { "Position unavailable; waiting for a known room.", "Позиция недоступна; ожидаем известную комнату.", "Position nicht verfügbar; warte auf einen bekannten Raum." },
+	tick = { "Click: toggle completion. Alt-click: show to group (FDR).", "Клик: отметить прохождение. Alt-клик: показать группе (FDR).", "Klick: als erledigt markieren. Alt-Klick: der Gruppe zeigen (FDR)." },
+	combat = { "Open the dungeon map after combat.", "Открой карту подземелья после боя.", "Öffne die Dungeonkarte nach dem Kampf." },
+	entrance = { "Dungeon entrance not built yet. Open its entrance on OpenMap first.", "Вход ещё не построен. Сначала открой вход этого данжа на OpenMap.", "Dungeoneingang noch nicht aufgebaut. Öffne zuerst seinen Eingang auf OpenMap." },
+	incompatible = { "Unsupported OpenMap dungeon view; integration disabled.", "Несовместимое окно данжей OpenMap; интеграция отключена.", "Nicht unterstütztes OpenMap-Dungeonfenster; Integration deaktiviert." },
+	ready = { "Ready. /omdr opens the dungeon browser; /omdr pos checks location.", "Готово. /omdr — список подземелий; /omdr pos — проверка позиции.", "Bereit. /omdr öffnet die Dungeonliste; /omdr pos prüft die Position." },
+	missing = { "OpenMap and ForeverDungeonRoutes must be enabled.", "Включи OpenMap и ForeverDungeonRoutes.", "OpenMap und ForeverDungeonRoutes müssen aktiviert sein." },
 }
-function NS.T(key) local s = strings[key] return s and s[RU and 2 or 1] or key end
+function NS.T(key) local s = strings[key] return s and (s[LOCALE_COLUMN] or s[1]) or key end
 function NS.Print(text) DEFAULT_CHAT_FRAME:AddMessage("|cffe6b85cOpenMap Routes|r: " .. tostring(text)) end
 
 local frame = CreateFrame("Frame")
