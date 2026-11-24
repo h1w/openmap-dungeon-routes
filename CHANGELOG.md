@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- German (deDE) translation of the map controls, tooltips and chat messages, plus a German addon list description.
+
 ## 0.1.4 — 2026-11-15
 
 - Fixed dark route casings covering colored paths at bends and crossings; casing, color and direction arrows now use separate draw sublevels, including reused lines.
